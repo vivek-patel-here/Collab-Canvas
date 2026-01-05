@@ -10,7 +10,7 @@ interface contextInterface {
     ,url:string
 }
 
-const StoreContext = createContext<contextInterface>({user:null,setUser:null,accessToken:null,notifyAlert:null,url:"null"});
+const StoreContext = createContext<contextInterface>({user:null,setUser:null,accessToken:null,notifyAlert:null,url:"https://collab-canvas-server-wh3i.onrender.com"});
 
 export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
 
