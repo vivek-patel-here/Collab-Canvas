@@ -7,10 +7,10 @@ interface contextInterface {
     setUser : any,
     accessToken:any,
     notifyAlert:any
-    ,url:string|null
+    ,url:string
 }
 
-const StoreContext = createContext<contextInterface>({user:null,setUser:null,accessToken:null,notifyAlert:null,url:null});
+const StoreContext = createContext<contextInterface>({user:null,setUser:null,accessToken:null,notifyAlert:null,url:"null"});
 
 export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
 
