@@ -1,10 +1,6 @@
 "use client";
 import { MeetingCanvasContextProvider } from "@/context/meetingCanvasContextProvider";
 import { MeetingContextProvider } from "@/context/meetingContext";
-
-import { useState } from "react";
-import { ArrowLeftRight } from "lucide-react";
-import { LiveKitRoom } from "@livekit/components-react";
 import LiveKitRoomProvider from "@/context/LiveKitRoomProvider";
 
 

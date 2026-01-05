@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.1.0",
   "engineVersion": "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Meeting {\n  id           String        @id @default(uuid())\n  code         String        @unique\n  hostId       String\n  isActive     Boolean       @default(true)\n  createdAt    DateTime      @default(now())\n  participants Participant[]\n}\n\nmodel Participant {\n  id        String   @id @default(uuid())\n  meetingId String\n  userId    String\n  name      String\n  role      Role\n  canDraw   Boolean  @default(false)\n  joinedAt  DateTime @default(now())\n  meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)\n\n  @@unique([meetingId, userId])\n  @@index([meetingId, userId])\n}\n\nenum Role {\n  HOST\n  MEMBER\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Meeting {\n  id           String        @id @default(uuid())\n  code         String        @unique\n  hostId       String\n  isActive     Boolean       @default(true)\n  createdAt    DateTime      @default(now())\n  participants Participant[]\n}\n\nmodel Participant {\n  id        String   @id @default(uuid())\n  meetingId String\n  userId    String\n  name      String\n  role      Role\n  canDraw   Boolean  @default(false)\n  joinedAt  DateTime @default(now())\n  meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)\n\n  @@unique([meetingId, userId])\n  @@index([meetingId, userId])\n}\n\nmodel CanvasSnapshot {\n  id        String   @id @default(uuid())\n  ownerId   String\n  title     String\n  elements  Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum Role {\n  HOST\n  MEMBER\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Meeting\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hostId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"participants\",\"kind\":\"object\",\"type\":\"Participant\",\"relationName\":\"MeetingToParticipant\"}],\"dbName\":null},\"Participant\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"meetingId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"canDraw\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"meeting\",\"kind\":\"object\",\"type\":\"Meeting\",\"relationName\":\"MeetingToParticipant\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Meeting\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hostId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"participants\",\"kind\":\"object\",\"type\":\"Participant\",\"relationName\":\"MeetingToParticipant\"}],\"dbName\":null},\"Participant\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"meetingId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"canDraw\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"meeting\",\"kind\":\"object\",\"type\":\"Meeting\",\"relationName\":\"MeetingToParticipant\"}],\"dbName\":null},\"CanvasSnapshot\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ownerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"elements\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -193,6 +193,16 @@ export interface PrismaClient<
     * ```
     */
   get participant(): Prisma.ParticipantDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.canvasSnapshot`: Exposes CRUD operations for the **CanvasSnapshot** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CanvasSnapshots
+    * const canvasSnapshots = await prisma.canvasSnapshot.findMany()
+    * ```
+    */
+  get canvasSnapshot(): Prisma.CanvasSnapshotDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

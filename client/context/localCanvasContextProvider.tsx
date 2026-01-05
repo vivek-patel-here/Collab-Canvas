@@ -89,34 +89,38 @@ export function LocalCanvasContexProvider({ children }: { children: React.ReactN
         sync_Undo_Redo_State();
     };
 
-    const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        const url = URL.createObjectURL(file);
+        const reader = new FileReader();
 
-        const img = new window.Image();
-        img.src = url;
+        reader.onload = (e) => {
+            const base64String = reader.result as string;
+            const img = new window.Image();
+            img.src = base64String;
 
-        img.onload = () => {
-            const scale = Math.min(800 / img.width, 800 / img.height, 1);
-            const newImgObj: ImageElement = {
-                id: crypto.randomUUID(),
-                x: 100,
-                y: 100,
-                type: "image",
-                width: img.width * scale,
-                height: img.height * scale,
-                rotation: 0,
-                src: url
+            img.onload = () => {
+                const scale = Math.min(800 / img.width, 800 / img.height, 1);
+                const newImgObj: ImageElement = {
+                    id: crypto.randomUUID(),
+                    x: 100,
+                    y: 100,
+                    type: "image",
+                    width: img.width * scale,
+                    height: img.height * scale,
+                    rotation: 0,
+                    src: base64String
+                };
+
+                setElements(prev => [...prev, newImgObj]);
+                commit({
+                    type: Action_Type.ADD,
+                    element: newImgObj,
+                });
             };
+        }
 
-            setElements(prev => [...prev, newImgObj]);
-            commit({
-                type: Action_Type.ADD,
-                element: newImgObj,
-            });
-        };
-
+        reader.readAsDataURL(file);
     }
 
     //to find relative coordinates

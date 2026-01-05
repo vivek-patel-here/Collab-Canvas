@@ -12,7 +12,7 @@ function Feature() {
     {src:"design.jpeg",p1:"Design" , heading:"Plan scalable systems together",p2:'Real time collaboration for architects and engineers'},
   ];
   return (
-    <div className='h-fit w-full mt-20 text-black py-5 bg-white flex flex-col items-center justify-center'>
+    <div className='h-fit w-full text-black py-5 bg-white mt-20 flex flex-col items-center justify-center'>
       <p >BUILD</p>
       <h1 className='text-7xl/relaxed my-4'>Everything you need here</h1>
       <p className='text-xl text-neutral-400'>Four tools built for teams that think and work together</p>

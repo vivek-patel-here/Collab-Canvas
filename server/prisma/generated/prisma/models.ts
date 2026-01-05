@@ -10,4 +10,5 @@
  */
 export type * from './models/Meeting.js'
 export type * from './models/Participant.js'
+export type * from './models/CanvasSnapshot.js'
 export type * from './commonInputTypes.js'

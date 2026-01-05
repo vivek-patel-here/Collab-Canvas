@@ -20,7 +20,7 @@ function Meeting() {
   const [code, setCode] = useState("");
   const [copy, setCopy] = useState(false);
   const [joinCode, setJoinCode] = useState("");
-  const { accessToken ,notifyAlert} = useStore();
+  const { accessToken ,notifyAlert,url} = useStore();
 
   const copyCode = async () => {
     try {
@@ -36,7 +36,7 @@ function Meeting() {
 
   const createMeet = async () => {
     try {
-      const resp = await fetch('http://localhost:8000/meeting/new', {
+      const resp = await fetch(`${url}/meeting/new`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -54,7 +54,7 @@ function Meeting() {
   const joinMeet = async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     try{
-      const resp = await fetch(`http://localhost:8000/meeting/join/${joinCode}`,{
+      const resp = await fetch(`${url}/meeting/join/${joinCode}`,{
         method :"POST",
         headers:{
           "content-type" :"application/json",

@@ -14,7 +14,7 @@ function Hero() {
   }
   return (
     <>
-      <div className="relative flex  h-120 w-full flex-col items-start justify-start overflow-hidden">
+      <div className="relative flex h-120 w-full flex-col items-start justify-start overflow-hidden">
       <BackgroundRippleEffect />
         <div className="mt-50 h-fit w-full">
           <h1 className='w-4xl mx-auto font-extrabold px-2 text-neutral-400'>COLLAB CANVAS</h1>

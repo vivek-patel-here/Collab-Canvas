@@ -8,7 +8,7 @@ const MeetingContext = createContext<any>({});
 export const MeetingContextProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     const { code } = useParams<{ code: string }>();
-    const { accessToken, user, notifyAlert } = useStore();
+    const { accessToken, user, notifyAlert ,url} = useStore();
     const socketRef = useRef<any>(null);
     const [inputMsg, setInputMsg] = useState<string>("");
     const [participants, setParticipants] = useState<{ uid: string, name: string, isHost: boolean, canDraw: boolean}[]>([]);
@@ -33,7 +33,7 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
 
     const validate = async () => {
         try {
-            const resp = await fetch(`http://localhost:8000/meeting/join/${code}`, {
+            const resp = await fetch(`${url}/meeting/join/${code}`, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",
@@ -58,7 +58,7 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
     const establishSocketConnection = () => {
         if (socketRef.current) return;
 
-        socketRef.current = io("http://localhost:8000", {
+        socketRef.current = io(url, {
             auth: {
                 token: accessToken
             }, query: {
@@ -148,7 +148,7 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
 
     const fetchLiveKitToken = async () => {
         try {
-            const resp = await fetch("http://localhost:8000/meeting/livekit-token/new", {
+            const resp = await fetch(`${url}/meeting/livekit-token/new`, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",

@@ -5,6 +5,8 @@ import Feature from '@/components/custom/feature';
 import Usage from '@/components/custom/Usage';
 import Feedback from '@/components/custom/feedback';
 import Stats from '@/components/custom/Stat';
+import CTA from '@/components/custom/CTA';
+import FAQ from '@/components/custom/FAQ';
 
 function Home() {
 
@@ -16,6 +18,8 @@ function Home() {
      <Usage/>
      <Feedback/>
      <Stats/>
+     <CTA/>
+     <FAQ/>
     </div>
   )
 }

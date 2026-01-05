@@ -47,3 +47,8 @@ export type Meeting = Prisma.MeetingModel
  * 
  */
 export type Participant = Prisma.ParticipantModel
+/**
+ * Model CanvasSnapshot
+ * 
+ */
+export type CanvasSnapshot = Prisma.CanvasSnapshotModel

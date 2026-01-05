@@ -36,6 +36,15 @@ model Participant{
   @@index([meetingId,userId]) 
 }
 
+model CanvasSnapshot{
+  id        String   @id @default(uuid())
+  ownerId   String
+  title     String
+  elements  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum Role{
   HOST
   MEMBER

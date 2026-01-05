@@ -7,15 +7,18 @@ interface contextInterface {
     setUser : any,
     accessToken:any,
     notifyAlert:any
+    ,url:string|null
 }
 
-const StoreContext = createContext<contextInterface>({user:null,setUser:null,accessToken:null,notifyAlert:null});
+const StoreContext = createContext<contextInterface>({user:null,setUser:null,accessToken:null,notifyAlert:null,url:null});
 
 export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [user, setUser] = useState<any | null>(null);
     const [accessToken,setToken] = useState<any>(null);
     const { enqueueSnackbar } = useSnackbar();
+    // const url = "http://localhost:8000";
+    const url = "https://collab-canvas-server-wh3i.onrender.com"
 
     const notifyAlert =(message :string)=>{
         return enqueueSnackbar(message,{autoHideDuration:2000});
@@ -32,7 +35,7 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
     },[user]);
 
 
-    return <StoreContext.Provider value={{user,setUser,accessToken,notifyAlert}}>
+    return <StoreContext.Provider value={{user,setUser,accessToken,notifyAlert,url}}>
         {children}
     </StoreContext.Provider>
 }
