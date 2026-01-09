@@ -29,6 +29,7 @@ export function LocalCanvasContexProvider({ children }: { children: React.ReactN
     const [canvasColor, setCanvasColor] = useState("#f0f0f0");
     const [canRedo, setCanRedo] = useState<boolean>(false);
     const [canUndo, setCanUndo] = useState<boolean>(false);
+    const isMeetingOn = false;
 
     const sync_Undo_Redo_State = () => {
         setCanRedo(redoStack.current.length > 0);
@@ -411,7 +412,7 @@ export function LocalCanvasContexProvider({ children }: { children: React.ReactN
 
     const canDraw = true;
 
-    return <CanvasStore.Provider value={{canDraw, addShape, removeElement, canUndo, canRedo, canvasColor, setCanvasColor, strokeColor, isPanning, position, preview, setPreview, handleKey, handleWheel, scale, setScale, handleMouseDown, handleMouseMove, handleMouseUp, gridEnable, setGridEnable, selectedTool, setSelectedTool, strokeWidth, setStrokeWidth, isDrawing, Action_Type, stageRef, canvasSize, setCanvasSize, elements, setElements, selectedId, setSelectedId, commit, undo, redo, handleImgUpload }}>
+    return <CanvasStore.Provider value={{isMeetingOn,canDraw, addShape, removeElement, canUndo, canRedo, canvasColor, setCanvasColor, strokeColor, isPanning, position, preview, setPreview, handleKey, handleWheel, scale, setScale, handleMouseDown, handleMouseMove, handleMouseUp, gridEnable, setGridEnable, selectedTool, setSelectedTool, strokeWidth, setStrokeWidth, isDrawing, Action_Type, stageRef, canvasSize, setCanvasSize, elements, setElements, selectedId, setSelectedId, commit, undo, redo, handleImgUpload }}>
         {children}
     </CanvasStore.Provider>
 }

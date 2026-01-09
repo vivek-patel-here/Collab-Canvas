@@ -69,7 +69,7 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
         console.log(`Welcome To Meeting:${code}`);
 
         //Fetch all the participants in the room
-        socketRef.current.on("participants", (data: { uid: string, name: string, isHost: boolean, canDraw: boolean, audio: boolean, video: boolean }[]) => {
+        socketRef.current.on("participants", (data: { uid: string, name: string, isHost: boolean, canDraw: boolean}[]) => {
             setParticipants([...data]);
         })
 
@@ -113,9 +113,10 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
             setCanDraw(flag);
         })
 
-        socketRef.current.on("hello-host", (flag: boolean) => setIsHost(flag));
+        socketRef.current.on("hello-host", (flag: boolean) => {
+            setIsHost(flag)}
+        );
     }
-
 
     const sendPublicMsg = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -191,7 +192,6 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
             cursorObj[pt.uid] = { x: 50, y: 50, name: pt.name, canDraw: pt.canDraw };
         }
         setCursors(cursorObj);
-        console.log(cursorObj);
     }, [participants])
 
     useEffect(() => {

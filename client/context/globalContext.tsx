@@ -18,7 +18,7 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
     const [accessToken,setToken] = useState<any>(null);
     const { enqueueSnackbar } = useSnackbar();
     // const url = "http://localhost:8000";
-    const url = "https://collab-canvas-server-wh3i.onrender.com"
+    const url = "https://collab-canvas-server-wh3i.onrender.com";
 
     const notifyAlert =(message :string)=>{
         return enqueueSnackbar(message,{autoHideDuration:2000});

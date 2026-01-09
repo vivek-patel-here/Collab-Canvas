@@ -14,7 +14,6 @@ function MeetingParticipants() {
                 return <li key={idx} className='flex items-center justify-between border my-2 border-neutral-200 p-1 rounded'>
                     <p className='pl-2 text-xs'>{pt.name}  </p>
                     <div className='flex items-center w-fit justify-end gap-3 '>
-                    {isHost && !pt.isHost && ( pt.canDraw ? <span className='text-[10px] text-red-600 cursor-pointer '>Revoke </span> : <span className='text-[10px] text-green-500 cursor-pointer w-fit h-fit p-1 rounded-2xl bg-green-200 '>Grant</span>)}
                     {pt.isHost && <span className='text-blue-400 text-[10px]'>Host</span>}
                     {audio?<Mic size={15} strokeWidth={1} className='text-green-500' fill='lightgreen'/>:<MicOff size={15} strokeWidth={1} className='text-red-500' fill='red'/>}
                     {video?<Video size={15} strokeWidth={1} className='text-green-500' fill='lightgreen'/>:<VideoOff size={15} strokeWidth={1} className='text-red-500' fill='red'/>}
