@@ -64,6 +64,7 @@ const ScreenShareIcon = ({
 function MeetingNavbar({setMode}:{setMode:any}) {
   const router = useRouter();
   const {audio,setAudio,video,setVideo,socketRef,code} = useMeeting();
+  const {url} = useStore();
   const { localParticipant } = useLocalParticipant();
   const room  = useRoomContext()
   const {accessToken,notifyAlert} =useStore();
@@ -74,7 +75,7 @@ function MeetingNavbar({setMode}:{setMode:any}) {
         room.disconnect();
 
         try {
-            const resp = await fetch(`http://localhost:8000/meeting/leave/${code}`, {
+            const resp = await fetch(`${url}/meeting/leave/${code}`, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",
