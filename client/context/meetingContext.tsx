@@ -27,6 +27,7 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
     const emitCursorPosition = useRef<(e: MouseEvent) => void | null>(null);
     const [canDraw, setCanDraw] = useState<boolean>(false);
     const [liveKitToken, setLivekitToken] = useState<string>("");
+    const [screen,setScreen] =useState<boolean>(false);
 
 
 
@@ -243,7 +244,7 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
         mode, setMode, inputMsg, setInputMsg, emitCanvasAction, socketRef, newChat, setnewChat, cursors,
         publicMessages, privateMessages, receiverId, setReceiverId, enableChats, setEnableChats, enableParticipants,
         setEnableParticipants, participants, audio, setAudio, video, setVideo, name, validate, establishSocketConnection,
-        sendPublicMsg, sendPrivatemsg, code, isHost
+        sendPublicMsg, sendPrivatemsg, code, isHost,screen,setScreen
     }}>
         {children}
     </MeetingContext.Provider>);
