@@ -6,6 +6,7 @@ import { useRoomContext } from '@livekit/components-react';
 function MeetingPermission({ setPermission }: { setPermission: any }) {
     const room = useRoomContext()
     const joinMeet = async () => {
+        if(!room) return ;
         await room.startAudio();
         await room.localParticipant.setCameraEnabled(false);
         await room.localParticipant.setMicrophoneEnabled(false)

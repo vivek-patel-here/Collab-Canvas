@@ -1,5 +1,5 @@
 "use client"
-import { LiveKitRoom } from '@livekit/components-react'
+import { LiveKitRoom,RoomAudioRenderer } from '@livekit/components-react'
 import React ,{useState} from 'react'
 import MeetingNavbar from "@/components/custom/meetingComponents/meetingNavbar";
 import MeetingInfo from "@/components/custom/meetingComponents/meetingInfo";
@@ -18,6 +18,7 @@ function LiveKitRoomProvider() {
     const [permission,setPermission] = useState<boolean>(false);
   return (
     <LiveKitRoom serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL} token={liveKitToken}>
+      <RoomAudioRenderer />
       {!permission ? <MeetingPermission setPermission={setPermission}/>
       :
       <>
