@@ -28,7 +28,7 @@ function Feature() {
 }
 
 function Card({item}:any){
-  return <div className='h-105 rounded-2xl border pb-5 flex flex-col justify-between border-neutral-100 bg-neutral-100 overflow-hidden w-75'>
+  return <div className='h-105 rounded-2xl border pb-5 flex flex-col justify-between border-neutral-100 bg-neutral-100 overflow-hidden w-75 hover:scale-x-105 hover:scale-y-105 hover:shadow-2xl shadow-neutral-500 transition-all duration-300'>
     <img src={item.src} alt="" className='h-40  w-full' />
     <p className='pl-3 font-bold'>{item.p1}</p>
     <h1 className='pl-3 h-fit w-9/10  text-3xl text-black'>{item.heading}</h1>

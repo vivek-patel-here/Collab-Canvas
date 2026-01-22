@@ -28,8 +28,9 @@ type TracksType = ReturnType<typeof useTracks>;
 const VideoGrid = ({ tracks,pin,setPin }: { tracks: TracksType ,pin:any , setPin:any }) => {
   if (!tracks.length) {
     return (
-      <div className="flex h-full items-center justify-center text-neutral-400">
-        Welcome to Collab Canvas. This is Video Meeting mode , ask Participant to open their video.
+      <div className="flex h-100 items-center flex-col text-center justify-center ">
+       <span className="text-xl w-full">Welcome to Collab Canvas.</span> <br/>
+        <span className="text-lg text-neutral-400">This is Video Meeting mode ,ask Participant to open their video.</span> 
       </div>
     );
   }

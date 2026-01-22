@@ -9,14 +9,18 @@ import MeetingCursor from "@/components/custom/meetingComponents/meetingCursor";
 import MeetingVideo from "@/components/custom/meetingComponents/meetingVideo";
 import { useMeeting } from './meetingContext';
 import CanvasBoard from "@/components/custom/CanvasComponents/CanvasBoard";
+import MeetingPermission from '@/components/custom/meetingComponents/meetingPermission';
 
 
 function LiveKitRoomProvider() {
     const {liveKitToken} = useMeeting();
     const [mode, setMode] = useState<boolean>(true); // true-> canvas Mode and false ->video mode
-
+    const [permission,setPermission] = useState<boolean>(false);
   return (
     <LiveKitRoom serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL} token={liveKitToken}>
+      {!permission ? <MeetingPermission setPermission={setPermission}/>
+      :
+      <>
          <MeetingNavbar  setMode={setMode}/>
         <MeetingInfo mode={mode} />
         {mode ? <>
@@ -25,6 +29,7 @@ function LiveKitRoomProvider() {
         </>: <MeetingVideo /> }
         <MeetingParticipants />
         <MeetingChat />
+      </>}
     </LiveKitRoom>
   )
 }
