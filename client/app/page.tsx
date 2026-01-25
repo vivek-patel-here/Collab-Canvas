@@ -5,8 +5,8 @@ import Feature from '@/components/custom/feature';
 import Usage from '@/components/custom/Usage';
 import Feedback from '@/components/custom/feedback';
 import Stats from '@/components/custom/Stat';
-import CTA from '@/components/custom/CTA';
 import FAQ from '@/components/custom/FAQ';
+import Seperator from '@/components/custom/Seperator';
 
 function Home() {
 
@@ -14,11 +14,16 @@ function Home() {
     <div className='min-h-screen w-screen bg-black text-white relative'>
      <Navbar/>
      <Hero/>
+     <Seperator/>
      <Feature/>
+     <Seperator/>
      <Usage/>
+     <Seperator/>
      <Feedback/>
+     <Seperator/>
      <Stats/>
-     <CTA/>
+     <Seperator/>
+
      <FAQ/>
     </div>
   )

@@ -134,4 +134,8 @@
 }
 
 
+*{
+  scroll-behavior: smooth;
+}
+
 

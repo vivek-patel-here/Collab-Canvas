@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Get, UseGuards, Req, InternalServerErrorException, HttpException } from '@nestjs/common';
+import { Body, Controller, Param, Post, Get, UseGuards, Req, InternalServerErrorException, HttpException, Delete } from '@nestjs/common';
 import { MeetingService } from './meeting.service';
 import { SupabaseGuard } from 'src/supabase/supabase.guard';
 
@@ -41,5 +41,16 @@ export class MeetingController {
         const username = req.user.email.split('@')[0];
         const {roomCode} = body;
         return this.meetingService.createLivekitToken(userId,roomCode,username); 
+    }
+
+    @Get('all')
+    async getAllMeetingDetails(@Req() req:any){
+        const userId = req.user.id;
+        return this.meetingService.getAllMeetingDetails(userId);
+    }
+
+    @Delete('/:id')
+    async deleteMeeting(@Req() req:any,@Param('id') meetingId:any){
+        return this.meetingService.deleteMeeting(meetingId,req.user.id);
     }
 }

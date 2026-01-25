@@ -136,5 +136,26 @@ export class MeetingService {
         return token.toJwt();
     }
 
+    async getAllMeetingDetails(userId:string){
+        const allMeet = await this.prisma.meeting.findMany({
+            where:{
+                hostId:userId
+            }
+        })
+
+        return allMeet;
+    }
+
+    async deleteMeeting(meetId:string,userId:string){
+        const deletedMeet = await this.prisma.meeting.delete({
+            where:{
+                hostId:userId,
+                id:meetId
+            }
+        })
+
+        return deletedMeet;
+    }
+
 
 }
