@@ -1,4 +1,6 @@
+import { useCanvas } from "@/context/canvasContext";
 import { Circle ,Layer} from "react-konva";
+
 
 export function GridLayer({
   stageRef,
@@ -22,6 +24,7 @@ export function GridLayer({
   const startY = Math.floor(-pos.y / scale / spacing) * spacing;
 
   const dots = [];
+  const {gridColor} = useCanvas();
 
   for (let x = startX; x < startX + width + spacing; x += spacing) {
     for (let y = startY; y < startY + height + spacing; y += spacing) {
@@ -31,7 +34,7 @@ export function GridLayer({
           x={x}
           y={y}
           radius={dotRadius}
-          fill="#d1d5db"
+          fill={gridColor}
         />
       );
     }

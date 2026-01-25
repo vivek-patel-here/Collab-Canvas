@@ -5,7 +5,7 @@ import { HandGrab, Pencil, Eraser, Minus, CaseSensitive, Image, Grid, Redo, Undo
 import {useCanvas} from '@/context/canvasContext';
 
 function BottomToolBox() {
-    const {removeElement,canUndo,canRedo, handleImgUpload, undo, redo, selectedId, selectedTool, setSelectedTool ,setGridEnable ,strokeColor,stokeWidth,setStrokeWidth} = useCanvas();
+    const {removeElement,canUndo,canRedo,toolboxColor,isMeetingOn, handleImgUpload, undo, redo, selectedId, selectedTool, setSelectedTool ,setGridEnable ,strokeColor,stokeWidth,setStrokeWidth} = useCanvas();
      const toolbar = [
             { id: 1, icon: Pencil, text: "pencil", func: () => setSelectedTool("pencil") },
             { id: 2, icon: Eraser, text: "eraser", func: () => setSelectedTool("eraser") },
@@ -15,7 +15,7 @@ function BottomToolBox() {
 
     return (
         <>
-            <div className=" w-fit h-12 -translate-1/2 flex items-center cursor-default justify-around gap-3 bg-white  border border-neutral-200 text-neutral-800 p-2 bottom-15 left-1/2 rounded-lg shadow-lg z-50 absolute">
+            <div className=" w-fit h-12 -translate-1/2 flex items-center cursor-default justify-around gap-3   border border-neutral-200 text-neutral-800 p-2 bottom-15 left-1/2 rounded-lg shadow-lg z-50 absolute" style={{backgroundColor:toolboxColor}}>
                 {(selectedTool ==="pencil" || selectedTool === "line") && <div className="flex flex-col w-fit h-full justify-between items-center">
                     <input type="color" className="h-8 w-12" onChange={(e)=>strokeColor.current=e.target.value}/>
                 </div>}
@@ -25,14 +25,16 @@ function BottomToolBox() {
                 </div>}
 
                 <div className='w-fit h-full flex items-center justify-center gap-2'>
-                    <Tools Icon={Undo} onClick={undo} className={canUndo ? "text-black" : "text-neutral-300"}/>
-                    <Tools Icon={Redo} onClick={redo} className={canRedo ? "text-black" : "text-neutral-300"} />
-                    <Tools Icon={X} className={selectedId ? "text-red-700" : "text-neutral-300"} strokeWidth={2} onClick={removeElement}/>
+                    {!isMeetingOn && <>
+                    <Tools Icon={Undo} onClick={undo} className={canUndo ? "text-black" : "text-neutral-500"}/>
+                    <Tools Icon={Redo} onClick={redo} className={canRedo ? "text-black" : "text-neutral-500"} />
+                    </>}
+                    <Tools Icon={X} className={selectedId ? "text-red-700" : "text-neutral-500"} strokeWidth={2} onClick={removeElement}/>
                 </div>
 
             </div>
 
-            <div className="absolute bottom-1 -translate-1/2 left-1/2 z-50 shadow-lg bg-white border border-neutral-200 text-neutral-800 p-2 h-12 w-2/8 rounded-lg flex items-center justify-around">
+            <div className="absolute bottom-1 -translate-1/2 left-1/2 z-50 shadow-lg  border border-neutral-200 text-neutral-800 p-2 h-12 w-2/8 rounded-lg flex items-center justify-around" style={{backgroundColor:toolboxColor}}>
                 <Tools Icon={HandGrab} onClick={()=>setSelectedTool("grab-hand")} className={selectedTool === "grab-hand"?"bg-neutral-100":""}/>
                 {toolbar.map((tool_icon: any, k: any) => {
                     return <Tools Icon={tool_icon.icon} key={tool_icon.id} onClick={tool_icon.func} className={selectedTool===tool_icon.text?"bg-neutral-100":""}/>

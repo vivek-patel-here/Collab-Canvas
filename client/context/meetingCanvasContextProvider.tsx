@@ -31,6 +31,11 @@ export function MeetingCanvasContextProvider({ children }: { children: React.Rea
     const [canUndo, setCanUndo] = useState<boolean>(false);
     const { emitCanvasAction, socketRef, canDraw } = useMeeting();
     const isMeetingOn = true;
+    const [gridColor,setGridColor] = useState("#d1d5db");
+    const [iconcolor,setIconColor] = useState("#000000");
+    const [toolboxColor,setToolboxColor] = useState("#ffffff");
+
+
 
     const sync_Undo_Redo_State = () => {
         setCanRedo(redoStack.current.length > 0);
@@ -137,33 +142,91 @@ export function MeetingCanvasContextProvider({ children }: { children: React.Rea
     }
 
     //zoom-in / zoom-out
-    const handleWheel = (e: any) => {
+
+    // const handleWheel = (e: any) => {
+    //     e.evt.preventDefault();
+    //     const MIN_SCALE = 0.2;  // 50%
+    //     const MAX_SCALE = 2;    // 200%
+    //     const WORLD_WIDTH = 3000;
+    //     const WORLD_HEIGHT = 2000;
+
+    //     const scaleBy = 1.03;
+    //     const stage = stageRef.current;
+    //     const oldScale = scale;
+
+    //     const pointer = stage.getPointerPosition();
+
+    //     const mousePointTo = {
+    //         x: (pointer.x - position.x) / oldScale,
+    //         y: (pointer.y - position.y) / oldScale,
+    //     };
+
+    //     let newScale = e.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+    //     newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
+    //     const newPos = {
+    //         x: pointer.x - mousePointTo.x * newScale,
+    //         y: pointer.y - mousePointTo.y * newScale,
+    //     };
+
+    //     newPos.x = Math.min(WORLD_WIDTH, Math.max(-WORLD_WIDTH, newPos.x));
+    //     newPos.y = Math.min(WORLD_HEIGHT, Math.max(-WORLD_HEIGHT, newPos.y));
+
+    //     setScale(newScale);
+    //     setPosition(newPos);
+    // };
+
+     const handleWheel = (e: any) => {
         e.evt.preventDefault();
-        const MIN_SCALE = 0.2;  // 50%
-        const MAX_SCALE = 2;    // 200%
-        const WORLD_WIDTH = 3000;
-        const WORLD_HEIGHT = 2000;
 
-        const scaleBy = 1.03;
         const stage = stageRef.current;
+        if (!stage) return;
+
+        const scaleBy = 1.05;
+
+        // 🔒 Safe zoom limits (tuned for whiteboard UX)
+        const MIN_SCALE = 0.2; // 20%
+        const MAX_SCALE = 2;  // 200%
+
         const oldScale = scale;
-
         const pointer = stage.getPointerPosition();
+        if (!pointer) return;
 
+        // Mouse position in world coords
         const mousePointTo = {
             x: (pointer.x - position.x) / oldScale,
             y: (pointer.y - position.y) / oldScale,
         };
 
-        let newScale = e.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+        // Calculate new scale
+        let newScale =
+            e.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+
         newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, newScale));
-        const newPos = {
+
+        // New position to keep zoom centered
+        let newPos = {
             x: pointer.x - mousePointTo.x * newScale,
             y: pointer.y - mousePointTo.y * newScale,
         };
 
-        newPos.x = Math.min(WORLD_WIDTH, Math.max(-WORLD_WIDTH, newPos.x));
-        newPos.y = Math.min(WORLD_HEIGHT, Math.max(-WORLD_HEIGHT, newPos.y));
+        /**
+         * Dynamic bounds logic
+         * Allow panning slightly outside viewport
+         * but prevent getting lost
+         */
+        const viewportWidth = stage.width();
+        const viewportHeight = stage.height();
+
+        const padding = 300 * newScale; // soft infinite feel
+
+        const minX = -viewportWidth * newScale + padding;
+        const maxX = viewportWidth - padding;
+
+        const minY = -viewportHeight * newScale + padding;
+        const maxY = viewportHeight - padding;
+
+        newPos.x = Math.min(maxX, Math.max(minX, newPos.x));
+        newPos.y = Math.min(maxY, Math.max(minY, newPos.y));
 
         setScale(newScale);
         setPosition(newPos);
@@ -448,7 +511,7 @@ export function MeetingCanvasContextProvider({ children }: { children: React.Rea
         };
     }, [socketRef.current]);
 
-    return <CanvasStore.Provider value={{isMeetingOn, canDraw, addShape, removeElement, canUndo, canRedo, canvasColor, setCanvasColor, strokeColor, isPanning, position, preview, setPreview, handleKey, handleWheel, scale, setScale, handleMouseDown, handleMouseMove, handleMouseUp, gridEnable, setGridEnable, selectedTool, setSelectedTool, strokeWidth, setStrokeWidth, isDrawing, Action_Type, stageRef, canvasSize, setCanvasSize, elements, setElements, selectedId, setSelectedId, commit, undo, redo, handleImgUpload }}>
+    return <CanvasStore.Provider value={{iconcolor,setIconColor,toolboxColor,setToolboxColor,gridColor,setGridColor,isMeetingOn, canDraw, addShape, removeElement, canUndo, canRedo, canvasColor, setCanvasColor, strokeColor, isPanning, position, preview, setPreview, handleKey, handleWheel, scale, setScale, handleMouseDown, handleMouseMove, handleMouseUp, gridEnable, setGridEnable, selectedTool, setSelectedTool, strokeWidth, setStrokeWidth, isDrawing, Action_Type, stageRef, canvasSize, setCanvasSize, elements, setElements, selectedId, setSelectedId, commit, undo, redo, handleImgUpload }}>
         {children}
     </CanvasStore.Provider>
 }
