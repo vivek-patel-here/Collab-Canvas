@@ -13,7 +13,6 @@ import {
 import { useStore } from '@/context/globalContext';
 import Loader from '@/components/kokonutui/loader';
 import { useRouter } from 'next/navigation';
-
 import { motion } from "motion/react";
 
 export default function Meeting() {
@@ -89,7 +88,7 @@ export default function Meeting() {
   const deleteMeetInfo = async (id: string, setWait: any) => {
     try {
       setWait(true);
-      const response = await fetch(`${url}/meeting/${id}`, {
+      const response = await fetch(`${url}/meeting/destroy/${id}`, {
         method: "DELETE",
         headers: {
           "Content-type": "application/json",

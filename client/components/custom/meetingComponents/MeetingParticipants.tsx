@@ -1,9 +1,15 @@
 "use client"
+import { useStore } from '@/context/globalContext';
 import { useMeeting } from '@/context/meetingContext'
 import { Mic, Video, X ,User, MicOff, VideoOff} from 'lucide-react';
 
 function MeetingParticipants() {
-    const {participants,enableParticipants,setEnableParticipants,isHost,audio,video} = useMeeting();
+    const {participants,enableParticipants,setEnableParticipants,isHost,code,socketRef} = useMeeting();
+    const {url,accessToken,notifyAlert} = useStore()
+    const grantPermission =async(participantId:string)=>{
+        if(!socketRef.current) return notifyAlert("Socket connection not active.");
+        socketRef.current.emit("grant:canDraw",participantId);
+    }
   return enableParticipants ? 
     <div className='absolute top-5 right-5  rounded-lg bg-white shadow-md w-70 h-110 z-50 text-black p-2 flex flex-col items-center '>
        <h1 className='text-md font-semibold mb-1 w-full'>Participants</h1> 
@@ -14,9 +20,9 @@ function MeetingParticipants() {
                 return <li key={idx} className='flex items-center justify-between border my-2 border-neutral-200 p-1 rounded'>
                     <p className='pl-2 text-xs'>{pt.name}  </p>
                     <div className='flex items-center w-fit justify-end gap-3 '>
-                    {pt.isHost && <span className='text-blue-400 text-[10px]'>Host</span>}
-                    {audio?<Mic size={15} strokeWidth={1} className='text-green-500' fill='lightgreen'/>:<MicOff size={15} strokeWidth={1} className='text-red-500' fill='red'/>}
-                    {video?<Video size={15} strokeWidth={1} className='text-green-500' fill='lightgreen'/>:<VideoOff size={15} strokeWidth={1} className='text-red-500' fill='red'/>}
+                    {pt.isHost && <span className='text-blue-400 text-[10px]'>Host</span> }
+                    {isHost && !pt.canDraw && <button onClick={()=>grantPermission(pt.uid)} className='text-[8px] border border-black p-1 rounded cursor-pointer'>Grant Permission</button>
+                    }
                     </div>
                 </li>
             })

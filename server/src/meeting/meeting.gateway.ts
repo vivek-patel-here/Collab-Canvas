@@ -1,3 +1,4 @@
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -123,12 +124,62 @@ export class MeetingGateway {
   }
 
   //canDraw  : grantPermission 
+
   @SubscribeMessage("grant:canDraw")
-  async GrantCanDraw(client: Socket, uid: any) {
-    if (!client.data.user) return;
-    client.data.user.canDraw = true;
-    client.emit("granted:canDraw", true);
-    this.server.to(client.data.meetingRoomCode).emit("canDraw-permission-granted",)
+  async GrantCanDraw(client: Socket, uid: string) {
+    try {
+      const meetingExists = await this.prisma.meeting.findFirst({
+        where: {
+          hostId: client.data.user?.userId,
+          code: client.data.meetingRoomCode
+        }
+      })
+
+      if (!meetingExists) throw new NotFoundException("Meeting Not found");
+
+      const isUserJoined = await this.prisma.participant.findFirst({
+        where: {
+          meetingId: meetingExists.id,
+          userId: uid
+        }
+      })
+
+      if (!isUserJoined) throw new BadRequestException("Participant does not belong to this meeting room");
+
+      const updatedUserPermission = await this.prisma.participant.update({
+        where: {
+          id:isUserJoined.id,
+          userId: uid,
+          meetingId: meetingExists.id
+        },
+        data: {
+          canDraw: true
+        }
+      })
+
+      const sockets = await this.server
+        .in(client.data.meetingRoomCode)
+        .fetchSockets();
+
+      for (const member of sockets) {
+        if (member.data.user?.userId === uid) {
+          member.data.user.canDraw = true;
+        }
+      }
+
+      const participantArray = sockets.map((member) => ({
+        uid: member.data.user?.userId,
+        name: member.data.user?.name,
+        canDraw: member.data.user?.canDraw,
+        isHost: member.data.user?.role === "HOST",
+      }));
+
+      this.server.to(client.data.meetingRoomCode).emit("participants", participantArray);
+      this.server.to(`user:${uid}`).emit("granted:canDraw", true);
+    } catch (err) {
+      console.log("Error in grant:canDraw");
+      console.log(err);
+    }
   }
 
   // Disconnect 

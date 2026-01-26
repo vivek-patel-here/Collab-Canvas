@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Get, UseGuards, Req, InternalServerErrorException, HttpException, Delete } from '@nestjs/common';
+import { Body, Controller, Param, Post, Get, UseGuards, Req, InternalServerErrorException, HttpException, Delete, Put, Patch } from '@nestjs/common';
 import { MeetingService } from './meeting.service';
 import { SupabaseGuard } from 'src/supabase/supabase.guard';
 
@@ -19,8 +19,6 @@ export class MeetingController {
             throw new InternalServerErrorException("Unable to create meeting .Try again!");
         }
     }
-
-
 
     @Post('join/:code')
     async join(@Req() req: any, @Param('code') code: any) {
@@ -49,7 +47,7 @@ export class MeetingController {
         return this.meetingService.getAllMeetingDetails(userId);
     }
 
-    @Delete('/:id')
+    @Delete('destroy/:id')
     async deleteMeeting(@Req() req:any,@Param('id') meetingId:any){
         return this.meetingService.deleteMeeting(meetingId,req.user.id);
     }

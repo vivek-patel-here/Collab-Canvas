@@ -244,7 +244,7 @@ export const MeetingContextProvider = ({ children }: { children: React.ReactNode
         mode, setMode, inputMsg, setInputMsg, emitCanvasAction, socketRef, newChat, setnewChat, cursors,
         publicMessages, privateMessages, receiverId, setReceiverId, enableChats, setEnableChats, enableParticipants,
         setEnableParticipants, participants, audio, setAudio, video, setVideo, name, validate, establishSocketConnection,
-        sendPublicMsg, sendPrivatemsg, code, isHost,screen,setScreen
+        sendPublicMsg, sendPrivatemsg, code, isHost,screen,setScreen,setCursors
     }}>
         {children}
     </MeetingContext.Provider>);

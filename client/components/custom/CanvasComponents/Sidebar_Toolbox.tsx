@@ -1,7 +1,7 @@
 "use client"
-import React, { useContext, useEffect, useState } from 'react';
-import { Shapes, MonitorSmartphone, Upload, SwatchBook, ChevronLeft, Save, List } from "lucide-react";
-import { HexColorPicker } from "react-colorful";
+import React, { useEffect, useState } from 'react';
+import { Shapes, MonitorSmartphone, Image, SwatchBook, ChevronLeft, Save, List } from "lucide-react";
+import jsPDF from "jspdf";
 import { cn } from '@/lib/utils';
 import { systemDesignComponents } from "./wireframeIcons"
 import { useCanvas } from '@/context/canvasContext';
@@ -30,11 +30,11 @@ function Sidebar_Toolbox() {
   const [heading2, setHeading2] = useState("Emoji");
   const [selected, setSelected] = useState(1);
   const [search, setSearch] = useState("");
-  const {setCanvasColor, addShape, elements ,setToolboxColor,setGridColor ,toolboxColor ,iconcolor,setIconColor} = useCanvas();
+  const { setCanvasColor, addShape, elements, setToolboxColor, setGridColor, toolboxColor, iconcolor, setIconColor, stageRef } = useCanvas();
   const [title, setTitle] = useState("");
   const { url, accessToken, notifyAlert } = useStore();
   const [filter, setFilter] = useState(systemDesignComponents);
-  const [activeTheme,setActivetheme] = useState("Default");
+  const [activeTheme, setActivetheme] = useState("Default");
 
   useEffect(() => {
     setFilter(systemDesignComponents.filter((icon: { icon: any, keywords: string }) => {
@@ -42,246 +42,246 @@ function Sidebar_Toolbox() {
     }))
   }, [search])
 
-const themeArray = [
-  // 🍁 Autumn
-  {
-    name: "Autumn",
-    canvasColor: "#FFF3E6",
-    toolboxColor: "#FF8C42",
-    gridColor: "#E6B089",
-    iconColor: "#2B1A0F" // deep brown
-  },
+  const themeArray = [
+    // 🍁 Autumn
+    {
+      name: "Autumn",
+      canvasColor: "#FFF3E6",
+      toolboxColor: "#FF8C42",
+      gridColor: "#E6B089",
+      iconColor: "#2B1A0F" // deep brown
+    },
 
-  // 🌱 Spring
-  {
-    name: "Spring",
-    canvasColor: "#F1FAF4",
-    toolboxColor: "#6BCF9B",
-    gridColor: "#A8DCC0",
-    iconColor: "#1F3D2B" // dark green
-  },
+    // 🌱 Spring
+    {
+      name: "Spring",
+      canvasColor: "#F1FAF4",
+      toolboxColor: "#6BCF9B",
+      gridColor: "#A8DCC0",
+      iconColor: "#1F3D2B" // dark green
+    },
 
-  // 🌊 Summer
-  {
-    name: "Summer",
-    canvasColor: "#F0FAFF",
-    toolboxColor: "#4FB6E5",
-    gridColor: "#9ED6F0",
-    iconColor: "#0F2A44" // navy blue
-  },
+    // 🌊 Summer
+    {
+      name: "Summer",
+      canvasColor: "#F0FAFF",
+      toolboxColor: "#4FB6E5",
+      gridColor: "#9ED6F0",
+      iconColor: "#0F2A44" // navy blue
+    },
 
-  // ❄️ Winter
-  {
-    name: "Winter",
-    canvasColor: "#F5F7FA",
-    toolboxColor: "#CBD5E1",
-    gridColor: "#C7CED8",
-    iconColor: "#1F2937" // slate gray
-  },
+    // ❄️ Winter
+    {
+      name: "Winter",
+      canvasColor: "#F5F7FA",
+      toolboxColor: "#CBD5E1",
+      gridColor: "#C7CED8",
+      iconColor: "#1F2937" // slate gray
+    },
 
-  // 🌅 Sunset
-  {
-    name: "Sunset",
-    canvasColor: "#FFF1EB",
-    toolboxColor: "#FF6F61",
-    gridColor: "#F4B2A8",
-    iconColor: "#3B0D0A" // deep wine
-  },
+    // 🌅 Sunset
+    {
+      name: "Sunset",
+      canvasColor: "#FFF1EB",
+      toolboxColor: "#FF6F61",
+      gridColor: "#F4B2A8",
+      iconColor: "#3B0D0A" // deep wine
+    },
 
-  // 🌲 Forest
-  {
-    name: "Forest",
-    canvasColor: "#F4FBF6",
-    toolboxColor: "#2F7D5A",
-    gridColor: "#9BC9B2",
-    iconColor: "#ECFDF5" // soft mint (light icon on dark toolbox)
-  },
+    // 🌲 Forest
+    {
+      name: "Forest",
+      canvasColor: "#F4FBF6",
+      toolboxColor: "#2F7D5A",
+      gridColor: "#9BC9B2",
+      iconColor: "#ECFDF5" // soft mint (light icon on dark toolbox)
+    },
 
-  // 🌊 Ocean
-  {
-    name: "Ocean",
-    canvasColor: "#EAF7F6",
-    toolboxColor: "#1CA7A6",
-    gridColor: "#8ED6D5",
-    iconColor: "#ECFEFF" // icy cyan
-  },
+    // 🌊 Ocean
+    {
+      name: "Ocean",
+      canvasColor: "#EAF7F6",
+      toolboxColor: "#1CA7A6",
+      gridColor: "#8ED6D5",
+      iconColor: "#ECFEFF" // icy cyan
+    },
 
-  // 🌾 Desert
-  {
-    name: "Desert",
-    canvasColor: "#FFF6E5",
-    toolboxColor: "#D97745",
-    gridColor: "#E4B68F",
-    iconColor: "#2A1608" // dark sand brown
-  },
+    // 🌾 Desert
+    {
+      name: "Desert",
+      canvasColor: "#FFF6E5",
+      toolboxColor: "#D97745",
+      gridColor: "#E4B68F",
+      iconColor: "#2A1608" // dark sand brown
+    },
 
-  // 🌸 Blossom
-  {
-    name: "Blossom",
-    canvasColor: "#FFF1F5",
-    toolboxColor: "#E85D75",
-    gridColor: "#F1A5B5",
-    iconColor: "#3A0A18" // deep rose
-  }
-  , {
-    name: "Aurora",
-    canvasColor: "#F4F7FB",
-    toolboxColor: "#5B5FEF",
-    gridColor: "#C6C8F4",
-    iconColor: "#EEF2FF" // soft lavender white
-  },
+    // 🌸 Blossom
+    {
+      name: "Blossom",
+      canvasColor: "#FFF1F5",
+      toolboxColor: "#E85D75",
+      gridColor: "#F1A5B5",
+      iconColor: "#3A0A18" // deep rose
+    }
+    , {
+      name: "Aurora",
+      canvasColor: "#F4F7FB",
+      toolboxColor: "#5B5FEF",
+      gridColor: "#C6C8F4",
+      iconColor: "#EEF2FF" // soft lavender white
+    },
 
-  // 🌋 Lava — Charcoal + Red
-  {
-    name: "Lava",
-    canvasColor: "#FAF5F5",
-    toolboxColor: "#9B1C1C",
-    gridColor: "#E3B4B4",
-    iconColor: "#FFF5F5" // warm white
-  },
+    // 🌋 Lava — Charcoal + Red
+    {
+      name: "Lava",
+      canvasColor: "#FAF5F5",
+      toolboxColor: "#9B1C1C",
+      gridColor: "#E3B4B4",
+      iconColor: "#FFF5F5" // warm white
+    },
 
-  // 🌾 Olive — Muted green + earth
-  {
-    name: "Olive",
-    canvasColor: "#F7F9F4",
-    toolboxColor: "#6B7F4E",
-    gridColor: "#C9D3B8",
-    iconColor: "#1F2D16" // deep olive
-  },
+    // 🌾 Olive — Muted green + earth
+    {
+      name: "Olive",
+      canvasColor: "#F7F9F4",
+      toolboxColor: "#6B7F4E",
+      gridColor: "#C9D3B8",
+      iconColor: "#1F2D16" // deep olive
+    },
 
-  // 🌙 Night Sky — Indigo + Slate
-  {
-    name: "Night Sky",
-    canvasColor: "#EEF1F8",
-    toolboxColor: "#435B80",
-    gridColor: "#B8C0D9",
-    iconColor: "#E0E7FF" // pale indigo
-  },
+    // 🌙 Night Sky — Indigo + Slate
+    {
+      name: "Night Sky",
+      canvasColor: "#EEF1F8",
+      toolboxColor: "#435B80",
+      gridColor: "#B8C0D9",
+      iconColor: "#E0E7FF" // pale indigo
+    },
 
-  // 🧊 Glacier — Ice blue + steel
-  {
-    name: "Glacier",
-    canvasColor: "#F1F8FB",
-    toolboxColor: "#3A6EA5",
-    gridColor: "#BFD7EA",
-    iconColor: "#F8FBFF" // crisp white
-  },
+    // 🧊 Glacier — Ice blue + steel
+    {
+      name: "Glacier",
+      canvasColor: "#F1F8FB",
+      toolboxColor: "#3A6EA5",
+      gridColor: "#BFD7EA",
+      iconColor: "#F8FBFF" // crisp white
+    },
 
-  // 🍇 Grape — Soft violet + wine
-  {
-    name: "Grape",
-    canvasColor: "#F8F4FB",
-    toolboxColor: "#6D3A7C",
-    gridColor: "#D6C0DD",
-    iconColor: "#FDF4FF" // light lavender
-  },
-   // ☀️ Solar — Bright Yellow Energy
-  {
-    name: "Solar",
-    canvasColor: "#FFFBEA",
-    toolboxColor: "#FACC15",
-    gridColor: "#E8D98C",
-    iconColor: "#3A2A00" // dark amber
-  },
+    // 🍇 Grape — Soft violet + wine
+    {
+      name: "Grape",
+      canvasColor: "#F8F4FB",
+      toolboxColor: "#6D3A7C",
+      gridColor: "#D6C0DD",
+      iconColor: "#FDF4FF" // light lavender
+    },
+    // ☀️ Solar — Bright Yellow Energy
+    {
+      name: "Solar",
+      canvasColor: "#FFFBEA",
+      toolboxColor: "#FACC15",
+      gridColor: "#E8D98C",
+      iconColor: "#3A2A00" // dark amber
+    },
 
-  // 🧊 Ice — Clean Cyan / White
-  {
-    name: "Ice",
-    canvasColor: "#F0FCFF",
-    toolboxColor: "#67E8F9",
-    gridColor: "#BEEAF2",
-    iconColor: "#083344" // deep cyan navy
-  },
+    // 🧊 Ice — Clean Cyan / White
+    {
+      name: "Ice",
+      canvasColor: "#F0FCFF",
+      toolboxColor: "#67E8F9",
+      gridColor: "#BEEAF2",
+      iconColor: "#083344" // deep cyan navy
+    },
 
-  // 🌸 Sakura — Soft Pink, Strong Contrast
-  {
-    name: "Sakura",
-    canvasColor: "#FFF5F7",
-    toolboxColor: "#FB7185",
-    gridColor: "#F3B4C0",
-    iconColor: "#3F0D1B" // dark rose
-  },
+    // 🌸 Sakura — Soft Pink, Strong Contrast
+    {
+      name: "Sakura",
+      canvasColor: "#FFF5F7",
+      toolboxColor: "#FB7185",
+      gridColor: "#F3B4C0",
+      iconColor: "#3F0D1B" // dark rose
+    },
 
-  // 🟣 Neon Violet — Creative, Bold
-  {
-    name: "Neon Violet",
-    canvasColor: "#F7F5FF",
-    toolboxColor: "#8B5CF6",
-    gridColor: "#C7BDF4",
-    iconColor: "#1E103F" // deep violet
-  },
+    // 🟣 Neon Violet — Creative, Bold
+    {
+      name: "Neon Violet",
+      canvasColor: "#F7F5FF",
+      toolboxColor: "#8B5CF6",
+      gridColor: "#C7BDF4",
+      iconColor: "#1E103F" // deep violet
+    },
 
-  // 🌿 Mint — Fresh & Crisp
-  {
-    name: "Mint",
-    canvasColor: "#F0FDF9",
-    toolboxColor: "#34D399",
-    gridColor: "#A7E6CF",
-    iconColor: "#064E3B" // dark teal green
-  },
+    // 🌿 Mint — Fresh & Crisp
+    {
+      name: "Mint",
+      canvasColor: "#F0FDF9",
+      toolboxColor: "#34D399",
+      gridColor: "#A7E6CF",
+      iconColor: "#064E3B" // dark teal green
+    },
 
-  // 🔥 Flame — Orange / Red Punch
-  {
-    name: "Flame",
-    canvasColor: "#FFF7ED",
-    toolboxColor: "#F97316",
-    gridColor: "#F0C29C",
-    iconColor: "#3B1400" // deep burnt brown
-  },
-   // 🍋 Citrus — Fresh Yellow + Green
-  {
-    name: "Citrus",
-    canvasColor: "#FFFEF2",
-    toolboxColor: "#A3E635",
-    gridColor: "#D9F0A3",
-    iconColor: "#1A2E05" // deep olive
-  },
+    // 🔥 Flame — Orange / Red Punch
+    {
+      name: "Flame",
+      canvasColor: "#FFF7ED",
+      toolboxColor: "#F97316",
+      gridColor: "#F0C29C",
+      iconColor: "#3B1400" // deep burnt brown
+    },
+    // 🍋 Citrus — Fresh Yellow + Green
+    {
+      name: "Citrus",
+      canvasColor: "#FFFEF2",
+      toolboxColor: "#A3E635",
+      gridColor: "#D9F0A3",
+      iconColor: "#1A2E05" // deep olive
+    },
 
-  // 🧁 Lavender — Soft Purple Calm
-  {
-    name: "Lavender",
-    canvasColor: "#F9F7FF",
-    toolboxColor: "#C4B5FD",
-    gridColor: "#DDD6FE",
-    iconColor: "#2E1065" // deep indigo
-  },
+    // 🧁 Lavender — Soft Purple Calm
+    {
+      name: "Lavender",
+      canvasColor: "#F9F7FF",
+      toolboxColor: "#C4B5FD",
+      gridColor: "#DDD6FE",
+      iconColor: "#2E1065" // deep indigo
+    },
 
-  // 🧊 Arctic — White + Cool Blue
-  {
-    name: "Arctic",
-    canvasColor: "#F8FAFC",
-    toolboxColor: "#60A5FA",
-    gridColor: "#C7DBF7",
-    iconColor: "#0A2540" // steel blue
-  },
+    // 🧊 Arctic — White + Cool Blue
+    {
+      name: "Arctic",
+      canvasColor: "#F8FAFC",
+      toolboxColor: "#60A5FA",
+      gridColor: "#C7DBF7",
+      iconColor: "#0A2540" // steel blue
+    },
 
-  // 🌺 Hibiscus — Pink + Magenta
-  {
-    name: "Hibiscus",
-    canvasColor: "#FFF5F9",
-    toolboxColor: "#EC4899",
-    gridColor: "#F3B6CF",
-    iconColor: "#4A0A23" // deep berry
-  },
+    // 🌺 Hibiscus — Pink + Magenta
+    {
+      name: "Hibiscus",
+      canvasColor: "#FFF5F9",
+      toolboxColor: "#EC4899",
+      gridColor: "#F3B6CF",
+      iconColor: "#4A0A23" // deep berry
+    },
 
-  // 🟠 Apricot — Soft Orange Cream
-  {
-    name: "Apricot",
-    canvasColor: "#FFF8F1",
-    toolboxColor: "#FB923C",
-    gridColor: "#F4C9A6",
-    iconColor: "#3B1D06" // warm brown
-  },
+    // 🟠 Apricot — Soft Orange Cream
+    {
+      name: "Apricot",
+      canvasColor: "#FFF8F1",
+      toolboxColor: "#FB923C",
+      gridColor: "#F4C9A6",
+      iconColor: "#3B1D06" // warm brown
+    },
 
-  // 🌊 Lagoon — Turquoise + Aqua
-  {
-    name: "Lagoon",
-    canvasColor: "#F0FDFA",
-    toolboxColor: "#2DD4BF",
-    gridColor: "#9EE7DB",
-    iconColor: "#042F2E" // deep teal
-  }
-];
+    // 🌊 Lagoon — Turquoise + Aqua
+    {
+      name: "Lagoon",
+      canvasColor: "#F0FDFA",
+      toolboxColor: "#2DD4BF",
+      gridColor: "#9EE7DB",
+      iconColor: "#042F2E" // deep teal
+    }
+  ];
 
   const selectShapes = (id: any) => {
     if (open && selected === id) {
@@ -323,7 +323,7 @@ const themeArray = [
     }
     setOpen(true);
     setSelected(id);
-    setHeading("Export canvas to");
+    setHeading("Export canvas");
     setHeading2("");
   }
 
@@ -333,6 +333,57 @@ const themeArray = [
     { id: 2, icon: MonitorSmartphone, text: "Wireframe", func: selectWireframe },
     { id: 3, icon: SwatchBook, text: "Themes", func: selectTheme },
   ]
+
+  const downloadFile = (dataURL: string, filename: string) => {
+    const link = document.createElement("a");
+    link.download = filename;
+    link.href = dataURL;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
+  const exportPNG = () => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const dataURL = stage.toDataURL({
+      mimeType: "image/png",
+      pixelRatio: 2,
+    });
+
+    downloadFile(dataURL, "canvas.png");
+  };
+
+  const exportJPEG = () => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const dataURL = stage.toDataURL({
+      mimeType: "image/jpeg",
+      quality: 0.92,
+      pixelRatio: 2,
+    });
+
+    downloadFile(dataURL, "canvas.jpg");
+  }
+
+  const exportPDF = () => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const dataURL = stage.toDataURL({ pixelRatio: 2 });
+
+    const pdf = new jsPDF({
+      orientation: stage.width() > stage.height() ? "landscape" : "portrait",
+      unit: "px",
+      format: [stage.width(), stage.height()],
+    });
+
+    pdf.addImage(dataURL, "PNG", 0, 0, stage.width(), stage.height());
+    pdf.save("canvas.pdf");
+  };
 
 
   const saveCanvas = async () => {
@@ -359,7 +410,7 @@ const themeArray = [
 
   return (
     <div className='flex h-2/3 w-fit items-center justify-center gap-2 text-black absolute z-50 top-1/2 left-2 -translate-y-1/2' >
-      <div className=' flex flex-col items-center gap-10 pt-10 rounded  h-full w-15 border border-neutral-100 ' style={{backgroundColor:toolboxColor}}>
+      <div className=' flex flex-col items-center gap-10 pt-10 rounded  h-full w-15 border border-neutral-100 ' style={{ backgroundColor: toolboxColor }}>
         {icons.map((Ic, id) => {
           return <div className='w-full h-fit flex flex-col items-center  justify-center cursor-pointer' key={id} onClick={() => Ic.func(Ic.id)}>
             <Ic.icon size={20} stroke={"#000000"} strokeWidth={1} className={cn(' h-10 w-10 rounded-full p-2', Ic.id === selected && open && 'bg-neutral-100')} />
@@ -370,7 +421,7 @@ const themeArray = [
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <div className='w-full h-fit flex flex-col items-center  justify-center cursor-pointer' onClick={() => setOpen(false)}>
-              <Save size={20} strokeWidth={1} stroke='#000000' className={cn(' h-10 w-10 rounded-full p-2')} style={{color:iconcolor}}/>
+              <Save size={20} strokeWidth={1} stroke='#000000' className={cn(' h-10 w-10 rounded-full p-2')} style={{ color: iconcolor }} />
               <p className='text-[9px]'>Save</p>
             </div>
           </AlertDialogTrigger>
@@ -396,9 +447,9 @@ const themeArray = [
 
       </div>
 
-      {open && <div className={cn('h-full w-70 border border-neutral-100 rounded  relative ', '')} style={{backgroundColor:toolboxColor}}>
-        <ChevronLeft strokeWidth={0.5} stroke={"#000000"} className='absolute translate-x-1/2 cursor-pointer rounded hover:bg-neutral-50 right-0 top-5 border h-10 w-5 border-neutral-100 ' style={{backgroundColor:toolboxColor}}  onClick={() => setOpen(false)} />
-        <h1 className='w-full h-10  flex items-center pl-3 text-sm font-semibold ' style={{color:iconcolor}}>{heading}</h1>
+      {open && <div className={cn('h-full w-70 border border-neutral-100 rounded  relative ', '')} style={{ backgroundColor: toolboxColor }}>
+        <ChevronLeft strokeWidth={0.5} stroke={"#000000"} className='absolute translate-x-1/2 cursor-pointer rounded hover:bg-neutral-50 right-0 top-5 border h-10 w-5 border-neutral-100 ' style={{ backgroundColor: toolboxColor }} onClick={() => setOpen(false)} />
+        <h1 className='w-full h-10  flex items-center pl-3 text-sm font-semibold ' style={{ color: iconcolor }}>{heading}</h1>
         {(selected === 1 || selected === 2) && <>
           <div className='w-full h-2/5 min-h-20 grid grid-cols-4 gap-y-3 place-items-center p-1  '>
 
@@ -415,7 +466,7 @@ const themeArray = [
 
 
           </div>
-          <h1 className='w-full h-10  flex items-center pl-3 text-sm font-semibold ' style={{color:iconcolor}}>{heading2}</h1>
+          <h1 className='w-full h-10  flex items-center pl-3 text-sm font-semibold ' style={{ color: iconcolor }}>{heading2}</h1>
           <div className={cn('w-full h-2/5 min-h-20 grid place-items-center p-1 overflow-y-scroll ', selected === 1 && open && "grid-cols-4 gap-y-4 ")}>
             {selected === 1 && Emoji_Icon.map((Emoji, id) => {
               return <Emoji.icon stroke={"#000000"} onClick={() => addShape(Emoji.path)} size={20} strokeWidth={4} key={id} className='cursor-pointer' />
@@ -437,20 +488,20 @@ const themeArray = [
         {
           selected === 3 && <>
             <div className="w-full flex items-center flex-col justify-center">
-              <p className='w-9/10 mb-5 text-xs ' style={{color:iconcolor}}>Change how your canvas looks and feels</p>
+              <p className='w-9/10 mb-5 text-xs ' style={{ color: iconcolor }}>Change how your canvas looks and feels</p>
 
               <div className='grid grid-cols-3 gap-2'>
                 {themeArray.map((clr: any, idx: any) => {
-                  return <div key={idx} className='flex flex-col items-center cursor-pointer w-20 h-10 justify-center' onClick={()=>{
+                  return <div key={idx} className='flex flex-col items-center cursor-pointer w-20 h-10 justify-center' onClick={() => {
                     setCanvasColor(clr.canvasColor);
                     setToolboxColor(clr.toolboxColor);
                     setGridColor(clr.gridColor);
                     setActivetheme(clr.name);
                   }}>
-                    <div className={cn('h-6 w-6 flex rounded-full overflow-hidden relative  border-neutral-700',activeTheme===clr.name ? "scale-125 border " :"border-0")}>
-                      <div className={`h-6 w-3`} style={{backgroundColor:clr.canvasColor}} ></div>
-                      <div className={`h-6 w-3`} style={{backgroundColor:clr.gridColor}} ></div>
-                      <div className='h-3 w-3 rounded-full absolute top-1/2 left-1/2 -translate-1/2' style={{backgroundColor:clr.toolboxColor}}></div>
+                    <div className={cn('h-6 w-6 flex rounded-full overflow-hidden relative  border-neutral-700', activeTheme === clr.name ? "scale-125 border " : "border-0")}>
+                      <div className={`h-6 w-3`} style={{ backgroundColor: clr.canvasColor }} ></div>
+                      <div className={`h-6 w-3`} style={{ backgroundColor: clr.gridColor }} ></div>
+                      <div className='h-3 w-3 rounded-full absolute top-1/2 left-1/2 -translate-1/2' style={{ backgroundColor: clr.toolboxColor }}></div>
                     </div>
                     <p className='text-[10px]'>{clr.name}</p>
                   </div>
@@ -465,8 +516,79 @@ const themeArray = [
                 setGridColor("#d1d5db")
                 setIconColor("#000000")
                 setActivetheme("Default")
-                }}>Use default theme</button>
+              }}>Use default theme</button>
             </div>
+          </>
+        }
+
+        {
+          selected == 4 && <>
+
+            <div className="flex items-center justify-between gap-3 px-3">
+              <button
+                onClick={exportPNG}
+                className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition"
+              >
+                <Image size={16} strokeWidth={1} />
+                <span className="text-xs font-medium">PNG</span>
+              </button>
+
+              <button
+                onClick={exportJPEG}
+                className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+              >
+                <Image size={16} strokeWidth={1} />
+                <span className="text-xs font-medium">JPEG</span>
+              </button>
+
+              <button
+                onClick={exportPDF}
+                className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition"
+              >
+                <Image size={16} strokeWidth={1} />
+                <span className="text-xs font-medium">PDF</span>
+              </button>
+            </div>
+
+            <h1 className="w-full pl-3 my-5 font-semibold text-sm">
+              Options
+            </h1>
+
+            <ul className="w-full px-3 flex flex-col gap-3">
+              <li
+                className="text-xs border border-black/20 py-2.5 pl-3 rounded-md 
+               hover:bg-black/5 cursor-pointer transition"
+                // onClick={openSavedCanvas}
+              >
+                Open saved canvas
+              </li>
+
+              <li
+                className="text-xs border border-black/20 py-2.5 pl-3 rounded-md 
+               hover:bg-black/5 cursor-pointer transition"
+                // onClick={renameCanvas}
+              >
+                Rename current canvas
+              </li>
+
+              <li
+                className="text-xs border border-black/20 py-2.5 pl-3 rounded-md 
+               hover:bg-black/5 cursor-pointer transition"
+                // onClick={duplicateCanvas}
+              >
+                Duplicate canvas
+              </li>
+
+              <li
+                className="text-xs border border-red-400/40 text-red-600 py-2.5 pl-3 
+               rounded-md hover:bg-red-50 cursor-pointer transition"
+                // onClick={clearCanvas}
+              >
+                Clear canvas
+              </li>
+            </ul>
+
+
           </>
         }
 

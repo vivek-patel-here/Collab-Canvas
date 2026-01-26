@@ -439,7 +439,7 @@ export function LocalCanvasContexProvider({ children }: { children: React.ReactN
 
     const canDraw = true;
 
-    return <CanvasStore.Provider value={{ iconcolor, setIconColor, toolboxColor, setToolboxColor, gridColor, setGridColor, isMeetingOn, canDraw, addShape, removeElement, canUndo, canRedo, canvasColor, setCanvasColor, strokeColor, isPanning, position, preview, setPreview, handleKey, handleWheel, scale, setScale, handleMouseDown, handleMouseMove, handleMouseUp, gridEnable, setGridEnable, selectedTool, setSelectedTool, strokeWidth, setStrokeWidth, isDrawing, Action_Type, stageRef, canvasSize, setCanvasSize, elements, setElements, selectedId, setSelectedId, commit, undo, redo, handleImgUpload }}>
+    return <CanvasStore.Provider value={{ stageRef,iconcolor, setIconColor, toolboxColor, setToolboxColor, gridColor, setGridColor, isMeetingOn, canDraw, addShape, removeElement, canUndo, canRedo, canvasColor, setCanvasColor, strokeColor, isPanning, position, preview, setPreview, handleKey, handleWheel, scale, setScale, handleMouseDown, handleMouseMove, handleMouseUp, gridEnable, setGridEnable, selectedTool, setSelectedTool, strokeWidth, setStrokeWidth, isDrawing, Action_Type, canvasSize, setCanvasSize, elements, setElements, selectedId, setSelectedId, commit, undo, redo, handleImgUpload }}>
         {children}
     </CanvasStore.Provider>
 }

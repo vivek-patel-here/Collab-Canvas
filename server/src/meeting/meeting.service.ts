@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { randomBytes } from 'node:crypto';
 import { AccessToken } from 'livekit-server-sdk';
@@ -139,7 +139,7 @@ export class MeetingService {
     async getAllMeetingDetails(userId:string){
         const allMeet = await this.prisma.meeting.findMany({
             where:{
-                hostId:userId
+                hostId:userId,
             }
         })
 
